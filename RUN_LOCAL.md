@@ -1,6 +1,6 @@
 # RUN_LOCAL.md – Hướng dẫn chạy Lab 04 (Nhóm 9)
 
-Tài liệu này hướng dẫn chi tiết cách clone repo, khởi chạy service IoT Notification của Nhóm 9 trong Docker và thực thi kiểm thử tự động.
+Tài liệu này hướng dẫn chi tiết cách clone repo, khởi chạy service IoT Notification của Nhóm 9 trong Docker và đã thực thi kiểm thử tự động.
 
 ---
 
