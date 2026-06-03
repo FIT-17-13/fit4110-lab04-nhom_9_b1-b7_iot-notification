@@ -1,0 +1,73 @@
+openapi: 3.1.0
+info:
+  title: Smart Campus - Notification Service (B7)
+  version: 1.0.0
+  description: Webhook nhận Alert từ Core Business để phát thông báo đa kênh.
+servers:
+  - url: http://localhost:4011
+    description: Prism Mock Server
+  - url: http://localhost:8001
+    description: Local Dev Server
+
+paths:
+  /webhooks/alerts:
+    post:
+      summary: Nhận alert event từ Core Business
+      operationId: receiveAlert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertEvent'
+      responses:
+        '202':
+          description: Đã tiếp nhận và đưa vào queue xử lý nội bộ (Async)
+        '422':
+          description: Dữ liệu alert không hợp lệ (Unprocessable Entity)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '429':
+          description: Cảnh báo Flood Alert (Quá nhiều request)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+components:
+  schemas:
+    AlertEvent:
+      type: object
+      required: [eventId, alertId, severity, message]
+      properties:
+        eventId:
+          type: string
+          format: uuid
+          description: Idempotency key
+        alertId:
+          type: string
+        severity:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, CRITICAL]
+        message:
+          type: string
+        occurredAt:
+          type: string
+          format: date-time
+
+    ProblemDetails:
+      type: object
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
