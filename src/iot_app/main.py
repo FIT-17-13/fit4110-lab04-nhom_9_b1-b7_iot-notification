@@ -188,7 +188,8 @@ def next_reading_id() -> str:
     return f"R-{today}-{len(READINGS) + 1:04d}"
 
 
-@app.get("/health", response_model=HealthResponse)
+# Thay dòng @app.get("/health", ...) bằng dòng này:
+@app.api_route("/health", methods=["GET", "HEAD"], response_model=HealthResponse)
 def health() -> HealthResponse:
     return HealthResponse(
         status="ok",
